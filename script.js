@@ -1,78 +1,107 @@
-const options = ["rock", "paper", "scissors"];
+const picks = ["rock", "paper", "scissors"];
 
-let compScore = 0;
-let playerScore = 0;
+const rockButton = document.querySelector(".rock");
+const paperButton = document.querySelector(".paper");
+const scissorsButton = document.querySelector(".scissors");
+const scoreLine = document.querySelector(".score");
+const compPickText = document.querySelector(".comp-pick-text");
+
 let compPickIndex = undefined;
 let compPick = undefined;
-let playerPickIndex = undefined;
 let playerPick = undefined;
+let scoreLineText = undefined;
+let compScore = 0;
+let playerScore = 0;
+let tempResult = undefined;
 
-function play(){
-    compPickIndex = Math.floor((Math.random()*3)) + 1;
-    compPick = options[compPickIndex-1];
-    playerPickIndex = +prompt("Type 1 for Rock, 2 for Paper, 3 for Scissors", "1");
-    playerPick = options[playerPickIndex-1];
+function updateScore(){
+    scoreLineText = `Computer: ${compScore} - ${playerScore} : You`
+    scoreLine.textContent = scoreLineText;
+}
 
-    if (playerPick == "rock"){
-        if (compPick == "rock"){
-            alert("DRAW")
-        } else if (compPick == "paper"){
-            alert("YOU LOSE");
-            compScore++;
-        } else {
-            alert("YOU WIN");
-            playerScore++;
+function setCompPick(){
+    let compPickIndex = Math.floor((Math.random())*3);
+    compPick = picks[compPickIndex];
+}
+
+
+
+rockButton.addEventListener("click", ()=>{
+    playerPick = "rock";
+    round();
+})
+
+paperButton.addEventListener("click", ()=>{
+    playerPick = "paper";
+    round();
+})
+scissorsButton.addEventListener("click", ()=>{
+    playerPick = "scissors";
+    round();
+})
+
+function endGame(){
+    if (playerScore == 5){
+        compPickText.textContent = `You won 5-${compScore}`;
+    } else if (compScore == 5){
+        compPickText.textContent = `You lost 5-${playerScore}`;
+    }
+
+    playerScore = 0;
+    compScore = 0;
+    updateScore();
+    
+}
+
+function round(){
+    setCompPick();
+    
+    if (playerPick=="rock"){
+        switch(compPick){
+            case "rock":
+                tempResult = "It's a draw";
+                break;
+            case "paper":
+                tempResult = "You Lost";
+                compScore++
+                break;
+            case "scissors":
+                tempResult = "You won";
+                playerScore++
         }
-    } else if (playerPick == "paper"){
-        if (compPick == "rock"){
-            alert("YOU WIN");
-            playerScore++;
-        } else if (compPick == "paper"){
-            alert("DRAW");
-        } else {
-            alert("YOU LOSE");
-            compScore++;
+    } else if (playerPick=="paper"){
+        switch(compPick){
+            case "paper":
+                tempResult = "It's a draw";
+                break;
+            case "scissors":
+                tempResult = "You Lost";
+                compScore++
+                break;
+            case "rock":
+                tempResult = "You won";
+                playerScore++
         }
     } else {
-        if (compPick == "rock"){
-            alert("YOU LOSE");
-            compScore++;
-        } else if (compPick == "paper"){
-            alert("YOU WIN");
-            playerScore++;
-        } else {
-            alert("DRAW");
+        switch(compPick){
+            case "scissors":
+                tempResult = "It's a draw";
+                break;
+            case "rock":
+                tempResult = "You Lost";
+                compScore++
+                break;
+            case "paper":
+                tempResult = "You won";
+                playerScore++
         }
     }
 
-    if (compScore == 3){
-        alert(`You lose this round 3-${playerScore}`)
-        playerScore = 0;
-        compScore = 0;
-    } else if (playerScore == 3) {
-        alert(`You win this round 3-${compScore}`)
-        playerScore = 0;
-        compScore = 0;
-        
-    } else {
-        alert(`Score: Computer ${compScore}-${playerScore} You`);
-        play();
+    compPickText.textContent = `Computer picked ${compPick}: ${tempResult}`;
+
+    updateScore();
+
+    if (playerScore == 5 || compScore==5){
+        endGame();
     }
 }
-    // alert(`Score: Computer ${compScore}-${playerScore} You`);
-
-    // if (compScore >= 3) {
-    //     alert(`You lose this round 3-${playerScore}`)
-    //     playerScore = 0;
-    //     compScore = 0;
-    // }
-
-    // if (playerScore >= 3) {
-    //     alert(`You win this round 3-${compScore}`)
-    //     playerScore = 0;
-    //     compScore = 0;
-    // }
-
-    // if (compScore > 0 || playerScore > 0){
-    //     play();
-    // }
